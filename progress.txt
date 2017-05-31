@@ -1,0 +1,13 @@
+5/30/17
+
+2/3 Fragments added. Need to trasfer user_account code into fragment code. Most of if not all is for the Camera. 
+
+-6 Hours
+
+5/31/17
+
+TODO Learning: 
+
+Find out how set onClickListener works. Seems like a method is being passed as a parameter. 
+What is an adapter in Android Studio.
+Describe MVC.
