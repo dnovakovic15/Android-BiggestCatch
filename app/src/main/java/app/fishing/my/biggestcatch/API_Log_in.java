@@ -33,7 +33,7 @@ class API_Log_in extends AsyncTask<String, Object, String> {
 
         //Connects to server to pull up the requested Players's stats.
         try {
-            url = new URL("https://52.14.155.129/signin.php");
+            url = new URL("https://52.14.155.129/biggestCatch/signin.php");
 
             HttpURLConnection http = null;
 

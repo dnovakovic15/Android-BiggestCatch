@@ -34,8 +34,7 @@ class API_Signup extends AsyncTask<String, Object, String> {
 
         //Connects to server to pull up the requested Players's stats.
         try {
-            url = new URL("http://52.14.155.129/project/signup.php.");
-            HttpURLConnection http = null;
+            url = new URL("https://52.14.155.129/biggestCatch/signup.php.");
 
             Certificate_Auth.trustAllHosts();
             https = (HttpsURLConnection) url.openConnection();

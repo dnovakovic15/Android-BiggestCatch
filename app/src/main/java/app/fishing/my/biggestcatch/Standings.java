@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +122,7 @@ public class Standings extends Fragment implements AdapterView.OnItemSelectedLis
         fishType = parent.getItemAtPosition(position).toString();
         List<Fish> fishCaught = new ArrayList<>();
 
-        API_Fish fishCatcher = new API_Fish();
+        API_GetCaughtFish fishCatcher = new API_GetCaughtFish();
 
         try {
             fishCaught = fishCatcher.execute(fishType, TokenSaver.getToken(getActivity())).get();
@@ -130,49 +134,84 @@ public class Standings extends Fragment implements AdapterView.OnItemSelectedLis
 
         LinearLayout rootView = (LinearLayout) getActivity().findViewById(R.id.AdvancedCatalogContainer);
         LinearLayout ppg = (LinearLayout) getActivity().findViewById(R.id.ppg);
+        LinearLayout ranking = (LinearLayout) getActivity().findViewById(R.id.rank);
         fillLayout(rootView, fishCaught);
         fillppg(ppg, fishCaught);
+        fillRanking(ranking, fishCaught);
     }
 
 
-    //Creates the square buttons for each Players playing today so that the user would be taken to the Playerstats activity.
-    public void fillLayout(LinearLayout root, final List players) {
-        for (int i = 0; i < players.size(); i++) {
-            TextView entry = new TextView(getActivity());
+    //Creates the square buttons for each Fish playing today so that the user would be taken to the Fishtats activity.
+    public void fillLayout(LinearLayout root, final List<Fish> fish) {
+        for (int i = 0; i < fish.size(); i++) {
+            Button myButton = new Button(getActivity());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            entry.setText(players.get(i).toString());
-            entry.setHeight(240);
-            entry.setTextSize(18);
-            params.setMargins(0,5,0,0);
-            entry.setLayoutParams(params);
-            entry.setId(i);
-            entry.setTextColor(Color.BLACK);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                entry.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                entry.setPadding(0, 75, 0, 0);
-                entry.setBackgroundColor(getActivity().getColor(R.color.spinnerItem));
+            //myButton.getBackground().setColorFilter(Color.parseColor("#6C0126FA"), PorterDuff.Mode.DARKEN);
+            myButton.setBackgroundColor(Color.WHITE);
+            params.setMargins(0, 20, 0, 20);
+            myButton.setHeight(240);
+            myButton.setTextSize(18);
+            myButton.setText(fish.get(i).getFisherman());
+            myButton.setLayoutParams(params);
+            myButton.setId(i);
+            myButton.setTextColor(Color.GRAY);
+            final int finalI = i;
+            Button.OnClickListener myButtonClick = new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //POP-UP IMAGE
+                }
+            };
+            myButton.setOnClickListener(myButtonClick);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                myButton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             }
-            root.addView(entry);
+            root.addView(myButton);
         }
     }
 
-    //Fills in each Players's button with their Draftkings fantasy points per game.
-    public void fillppg(LinearLayout ppg, List players) {
-        for (int i = 0; i < players.size(); i++) {
-            TextView myView = new TextView(getActivity());
-            myView.setTextSize(18);
-            myView.setHeight(240);
-            myView.setText("46 in.");
+    //Fills in each Fish's button with their Draftkings fantasy points per game.
+    public void fillppg(LinearLayout ppg, List<Fish> fish) {
+        for (int i = 0; i < fish.size(); i++) {
+            Button mybutton = new Button(getActivity());
+            mybutton.setTextSize(18);
+            mybutton.setTextColor(Color.GRAY);
+            mybutton.setBackgroundColor(Color.WHITE);
+            //mybutton.getBackground().setColorFilter(Color.parseColor("#6C0126FA"), PorterDuff.Mode.DARKEN);
+            mybutton.setHeight(240);
+            mybutton.setText(Double.toString(fish.get(i).getSize()));
+            mybutton.setClickable(false);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0,5,0,0);
-            myView.setLayoutParams(params);
-            myView.setId(i + 100);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                myView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                myView.setPadding(0, 75, 0, 0);
-                myView.setBackgroundColor(getActivity().getColor(R.color.spinnerItem));
+            params.setMargins(0, 20, 0, 20);
+            mybutton.setLayoutParams(params);
+            mybutton.setId(i + 100);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                mybutton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             }
-            ppg.addView(myView);
+            ppg.addView(mybutton);
+        }
+    }
+
+    //Fills ranking
+    public void fillRanking(LinearLayout ppg, List<Fish> fish) {
+        for (int i = 0; i < fish.size(); i++) {
+            Button mybutton = new Button(getActivity());
+            mybutton.setTextSize(18);
+            mybutton.setTextColor(Color.BLACK);
+            mybutton.setBackgroundColor(Color.WHITE);
+            //mybutton.getBackground().setColorFilter(Color.parseColor("#6C0126FA"), PorterDuff.Mode.DARKEN);
+            mybutton.setHeight(240);
+            mybutton.setText("#" + Integer.toString(i + 1));
+            mybutton.setClickable(false);
+            mybutton.setId(i + 100);
+            mybutton.setTypeface(null, Typeface.BOLD);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, 20, 0, 20);
+            mybutton.setLayoutParams(params);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                mybutton.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            }
+            ppg.addView(mybutton);
         }
     }
 

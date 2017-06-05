@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-class API_Fish extends AsyncTask<Object, Object, List<Fish>> {
+class API_GetCaughtFish extends AsyncTask<Object, Object, List<Fish>> {
 
     private List<Fish> finalFish = new ArrayList();
 
@@ -35,7 +35,7 @@ class API_Fish extends AsyncTask<Object, Object, List<Fish>> {
         HttpURLConnection conn = null;
         String line, result;
         try {
-            url = new URL("http://52.14.155.129/project/api_players.php.");
+            url = new URL("http://52.14.155.129/biggestCatch/api_caught_fish.php.");
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
@@ -57,10 +57,9 @@ class API_Fish extends AsyncTask<Object, Object, List<Fish>> {
 
             for(int i = 0; i < jArray.length(); i++) {
                 JSONObject jObject = jArray.getJSONObject(i);
-                String type = jObject.getString("type");
-                String fisherman = jObject.getString("fisherman");
+                String fisherman = jObject.getString("user_id");
                 Double size = jObject.getDouble("size");
-                Fish today = new Fish(type, size, fisherman);
+                Fish today = new Fish((String) params[0], size, fisherman);
                 fish.add(today);
             }
 

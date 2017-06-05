@@ -110,7 +110,7 @@ public class Camera extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        String onFragmentInteraction();
     }
 
     //The following  methods and their variables are for the Camera tab portion of the bottom navigation view.
@@ -142,6 +142,7 @@ public class Camera extends Fragment {
 
     //Camera Tab View: Fetches the image from the intent started with dispatchTakePictureIntent().
     Bitmap myBitmap;
+    String mCurrentPhotoPath;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
@@ -157,7 +158,6 @@ public class Camera extends Fragment {
         }
     }
 
-    String mCurrentPhotoPath;
 
     //Camera tab View: Creates the picture file.
     private File createImageFile() throws IOException {
@@ -196,7 +196,7 @@ public class Camera extends Fragment {
 
         alertDialogBuilder.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                alertBuilderFishSize();
+                alertBuilderFishSize(et.getText().toString());
             }
         });
 
@@ -206,7 +206,7 @@ public class Camera extends Fragment {
     }
 
     //Creates a pop-up that asks the user to input fish size. Then calls the API_SendFish class to send fish to database.
-    private void alertBuilderFishSize(){
+    private void alertBuilderFishSize(final String type){
         final EditText et = new EditText(this.getContext());
         et.setGravity(Gravity.CENTER);
 
@@ -225,9 +225,10 @@ public class Camera extends Fragment {
         alertDialogBuilder.setCancelable(true).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 API_SendFish myFish = new API_SendFish();
+                System.out.println("mListen: " + mListener.onFragmentInteraction());
 
                 try{
-                    myFish.execute(myBitmap).get();
+                    myFish.execute(myBitmap, type, et.getText().toString(),mListener.onFragmentInteraction(), TokenSaver.getToken(getActivity())).get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

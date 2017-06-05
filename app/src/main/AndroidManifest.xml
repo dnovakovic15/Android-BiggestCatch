@@ -25,6 +25,7 @@
         </activity>
         <activity
             android:name=".UserAccount" />
+        <activity android:name=".ImageDialog" android:theme="@style/myDialogTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -42,4 +43,6 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -33,20 +33,27 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/AdvancedCatalogContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_weight=".2"
+                    android:layout_weight="0.2"
                     android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ppg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight=".80"
+                    android:layout_weight="0.4"
                     android:orientation="vertical"></LinearLayout>
             </LinearLayout>
 
