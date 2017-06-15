@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +45,7 @@ import static android.app.Activity.RESULT_OK;
 public class Camera extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
+    private String mCurrentPhotoPath;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -68,6 +71,8 @@ public class Camera extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
         dispatchTakePictureIntent();
+//        TextView title = (TextView) getActivity().findViewById(R.id.action_bar_title);
+//        title.setText("Camera");
     }
 
     @Override
@@ -113,9 +118,10 @@ public class Camera extends Fragment {
         String onFragmentInteraction();
     }
 
+
     //The following  methods and their variables are for the Camera tab portion of the bottom navigation view.
 
-    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_TAKE_PHOTO = 12345;
 
     //Camera Tab View: Starts the user's device camera and saves the image into a path specified in the Android Manifest provider portion under meta-data:resources.
     private void dispatchTakePictureIntent() {
@@ -129,11 +135,13 @@ public class Camera extends Fragment {
             } catch (IOException ex) {
                 // Error occurred while creating the File
             }
+
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this.getContext(),
                         "com.example.android.fileprovider",
                         photoFile);
+                System.out.println("URI: " + photoURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
@@ -142,7 +150,6 @@ public class Camera extends Fragment {
 
     //Camera Tab View: Fetches the image from the intent started with dispatchTakePictureIntent().
     Bitmap myBitmap;
-    String mCurrentPhotoPath;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
@@ -151,9 +158,10 @@ public class Camera extends Fragment {
             if(imgFile.exists()){
 
                 myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                ImageView myImage = (ImageView) getView().findViewById(R.id.imageView);
-                myImage.setImageBitmap(myBitmap);
-                System.out.println("Image: ");
+                ImageView myImage = (ImageView) getView().findViewById(R.id.fishPic);
+                int nh = (int) (myBitmap.getHeight() * (512.0 / myBitmap.getWidth()) );
+                Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, 512, nh, true);
+                myImage.setImageBitmap(scaled);
             }
         }
     }
@@ -167,8 +175,8 @@ public class Camera extends Fragment {
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                ".jpg",
+                storageDir
         );
 
         // Save a file: path for use with ACTION_VIEW intents
@@ -227,13 +235,8 @@ public class Camera extends Fragment {
                 API_SendFish myFish = new API_SendFish();
                 System.out.println("mListen: " + mListener.onFragmentInteraction());
 
-                try{
-                    myFish.execute(myBitmap, type, et.getText().toString(),mListener.onFragmentInteraction(), TokenSaver.getToken(getActivity())).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                myFish.execute(myBitmap, type, et.getText().toString(),mListener.onFragmentInteraction(), TokenSaver.getToken(getActivity()));
+
             }
         });
 

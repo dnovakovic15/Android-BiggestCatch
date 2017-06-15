@@ -5,13 +5,10 @@ package app.fishing.my.biggestcatch;
  */
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.widget.ImageView;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,11 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
-import static app.fishing.my.biggestcatch.R.id.imageView;
 
 
 class API_SendFish extends AsyncTask<Object, Object, String> {
@@ -57,7 +50,7 @@ class API_SendFish extends AsyncTask<Object, Object, String> {
             writer.write("&image=" + encodedImage);
             writer.write("&type=" + params[1]);
             writer.write("&size=" + params[2]);
-            writer.write("&email=" + params[3]);
+            writer.write("&name=" + params[3]);
             writer.write("&token=" + params[4]);
             writer.flush();
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -79,13 +72,7 @@ class API_SendFish extends AsyncTask<Object, Object, String> {
         finally  {
             conn.disconnect();
         }
-
-
-        byte[] imageByte;
-        imageByte = Base64.decode(result, Base64.URL_SAFE);
-        ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-        Bitmap bitmap = BitmapFactory.decodeStream(bis);
-
+        System.out.println("Sendfish: " + result);
         return result;
     }
 

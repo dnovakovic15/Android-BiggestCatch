@@ -1,5 +1,6 @@
 package app.fishing.my.biggestcatch;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,17 +10,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private String username = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        onLoginSuccess("DELETE THIS");
+        //onLoginSuccess("DELETE THIS");
     }
 
     public void login(View v) {
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         API_Log_in asyncTask1 = new API_Log_in();
-                        String verification = null;
+                        List<String> verification = null;
 
                         try {
                             verification = asyncTask1.execute(email, password).get();
@@ -65,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
-                        if(verification.indexOf("pass") > -1){
-                            TokenSaver.setToken(getApplicationContext(), verification.substring(8));
+                        if(verification.get(2).indexOf("pass") > -1){
+                            TokenSaver.setToken(getApplicationContext(), verification.get(0));
                             System.out.println("Token: " + TokenSaver.getToken(getApplicationContext()));
-                            onLoginSuccess(email);
+                            username = verification.get(1);
+                            onLoginSuccess(username);
                         }
                         else{
                             onLoginFailed();
@@ -97,11 +101,11 @@ public class MainActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSuccess(String email) {
+    public void onLoginSuccess(String username) {
         findViewById(R.id.btn_login).setEnabled(true);
         Toast.makeText(getBaseContext(), "Log in Successful", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(MainActivity.this, UserAccount.class);
-        intent.putExtra("email", email);
+        intent.putExtra("username", username);
         startActivity(intent);
         finish();
     }
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.input_email)).getText().toString();
         String password = ((EditText) findViewById(R.id.input_password)).getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {
             final EditText e_mail = (EditText) findViewById(R.id.input_email);
             e_mail.setError("Enter a valid email address");
             valid = false;

@@ -1,16 +1,18 @@
 package app.fishing.my.biggestcatch;
 
+import java.io.Serializable;
+
 /**
  * Created by darko on 5/31/17.
  */
 
-public class Fish {
+public class Fish implements Serializable {
 
     private String fisherman = "default";
-    private double size = 0.00;
+    private int size = 0;
     private String type = "fisherman";
 
-    public Fish(String type, double size, String fisherman){
+    public Fish(String type, int size, String fisherman){
         this.size = size;
         this.type = type;
         this.fisherman = fisherman;
@@ -20,7 +22,7 @@ public class Fish {
         this.type = type;
     }
 
-    public void setSize(double size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
@@ -29,7 +31,7 @@ public class Fish {
         return type;
     }
 
-    public double getSize() {
+    public int getSize() {
         return size;
     }
 

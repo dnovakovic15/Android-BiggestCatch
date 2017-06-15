@@ -10,6 +10,6 @@
     <color name="ButtonGrey">#cb474545</color>
     <color name="backColor">#b30126fa</color>
     <color name="SignIn">#07146a</color>
-    <color name="spinnerItemBackground">#b8303f9f</color>
+    <color name="spinnerItemBackground">#7d066c03</color>
     <color name="spinnerItem">#2799999f</color>
 </resources>

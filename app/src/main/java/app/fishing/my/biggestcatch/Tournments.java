@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.concurrent.ExecutionException;
 
@@ -83,7 +86,8 @@ public class Tournments extends Fragment {
             e.printStackTrace();
         }
 
-        image.setImageBitmap(image2);
+        Glide.with(this).load("http://52.14.155.129/biggestCatch/image.jpeg").into(image);
+        //image.setImageBitmap(image2);
 
         return view;
 

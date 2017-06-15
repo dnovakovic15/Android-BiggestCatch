@@ -57,8 +57,8 @@ class API_GetCaughtFish extends AsyncTask<Object, Object, List<Fish>> {
 
             for(int i = 0; i < jArray.length(); i++) {
                 JSONObject jObject = jArray.getJSONObject(i);
-                String fisherman = jObject.getString("user_id");
-                Double size = jObject.getDouble("size");
+                String fisherman = jObject.getString("username");
+                int size = jObject.getInt("size");
                 Fish today = new Fish((String) params[0], size, fisherman);
                 fish.add(today);
             }

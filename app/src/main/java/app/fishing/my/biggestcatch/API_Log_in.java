@@ -6,6 +6,10 @@ package app.fishing.my.biggestcatch;
 
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,20 +17,23 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 
-class API_Log_in extends AsyncTask<String, Object, String> {
+class API_Log_in extends AsyncTask<String, Object, List<String>> {
 
     private String result;
+    private List<String> output = new ArrayList<>();
 
 
     @Override
     protected void onPreExecute() {
     }
 
-    protected String doInBackground(String... params) {
+    protected List<String> doInBackground(String... params) {
         URL url;
         String line;
         HttpsURLConnection https = null;
@@ -57,6 +64,16 @@ class API_Log_in extends AsyncTask<String, Object, String> {
             result = sBuilder.toString();
             writer.close();
             reader.close();
+
+            JSONArray jArray = new JSONArray(result);
+            System.out.println("Result: " + result);
+            String key = jArray.get(0).toString();
+            String username = jArray.get(1).toString();
+            String verificaiton = jArray.get(2).toString();
+
+            output.add(key);
+            output.add(username);
+            output.add(verificaiton);
         }
 
         catch (MalformedURLException e) {
@@ -64,11 +81,15 @@ class API_Log_in extends AsyncTask<String, Object, String> {
         }
         catch (IOException e) {
             System.out.print(e);
-        } finally  {
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        finally  {
             https.disconnect();
         }
-        System.out.println("Result: " + result);
-        return result;
+
+        return output;
     }
 
     public void onPostExecute(String result) {

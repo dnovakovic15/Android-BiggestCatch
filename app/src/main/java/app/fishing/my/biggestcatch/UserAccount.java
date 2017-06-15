@@ -30,7 +30,8 @@ import java.util.concurrent.ExecutionException;
 
 public class UserAccount extends AppCompatActivity implements Standings.OnFragmentInteractionListener, Tournments.OnFragmentInteractionListener, Camera.OnFragmentInteractionListener{
 
-    private String email;
+    private String username;
+    private String path;
 
     //Sets the bottom navigation actions.
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -75,7 +76,7 @@ public class UserAccount extends AppCompatActivity implements Standings.OnFragme
 
     @Override
     public String onFragmentInteraction() {
-        return email;
+        return username;
     }
 
     //Creates the navigation view.
@@ -89,12 +90,18 @@ public class UserAccount extends AppCompatActivity implements Standings.OnFragme
         navigation.setItemIconTintList(null);
 
         Intent myIntent = getIntent();
-        email = myIntent.getStringExtra("email");
+        username = myIntent.getStringExtra("username");
+        System.out.println("ReCreating");
 
-        switchToFragment1();
+        if(savedInstanceState == null){
+            System.out.println("SavedState");
+            switchToFragment1();
+        }
     }
 
     public void submit(View view){
 
     }
+
+
 }

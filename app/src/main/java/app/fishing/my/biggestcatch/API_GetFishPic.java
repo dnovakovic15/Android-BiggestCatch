@@ -37,7 +37,7 @@ class API_GetFishPic extends AsyncTask<Object, Object, Bitmap> {
         HttpURLConnection conn = null;
         String line, result = "";
         try {
-            url = new URL("http://52.14.155.129/biggestCatch/api_grab_fish.php.");
+            url = new URL("http://52.14.155.129/biggestCatch/api_grab_fish.php");
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
